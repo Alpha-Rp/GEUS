@@ -1,4 +1,4 @@
-# GEUS
+# GEUS 3D
 
 
 A modern 3D endless runner game built with Three.js, featuring dynamic environments and weather systems.
