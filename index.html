@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Temple Run 3D</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+        }
+
+        #gameUI {
+            position: fixed;
+            width: 100%;
+            pointer-events: none;
+        }
+
+        #topBar {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+        }
+
+        #stats {
+            display: flex;
+            gap: 20px;
+        }
+
+        .stat {
+            color: white;
+            font-size: 24px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stat i {
+            font-size: 28px;
+        }
+
+        #powerUps {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .powerUp {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            background: rgba(0,0,0,0.5);
+            border: 2px solid rgba(255,255,255,0.3);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 24px;
+            animation: pulse 2s infinite;
+        }
+
+        #controls {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.5);
+            padding: 15px;
+            border-radius: 10px;
+            color: white;
+            text-align: left;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        #controls:hover {
+            opacity: 1;
+        }
+
+        .key {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin: 0 5px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        #weather {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            color: white;
+            font-size: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #theme {
+            position: fixed;
+            top: 60px;
+            left: 20px;
+            color: white;
+            font-size: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        #settings {
+            position: fixed;
+            top: 100px;
+            left: 20px;
+            color: white;
+            font-size: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            cursor: pointer;
+            background: rgba(0,0,0,0.5);
+            padding: 10px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        #settings:hover {
+            background: rgba(0,0,0,0.7);
+            transform: scale(1.05);
+        }
+
+        #settingsMenu {
+            position: fixed;
+            top: 150px;
+            left: 20px;
+            background: rgba(0,0,0,0.8);
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+            display: none;
+            z-index: 1000;
+        }
+
+        .settingsOption {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .settingsOption label {
+            cursor: pointer;
+        }
+
+        .notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <div id="gameUI">
+        <div id="topBar">
+            <div id="stats">
+                <div class="stat">
+                    <i class="fas fa-star"></i>
+                    <span id="score">0</span>
+                </div>
+                <div class="stat">
+                    <i class="fas fa-road"></i>
+                    <span id="distance">0m</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="powerUps">
+            <div id="doubleJump" class="powerUp" title="Double Jump">
+                <i class="fas fa-arrow-up"></i>
+            </div>
+            <div id="magnet" class="powerUp" title="Coin Magnet">
+                <i class="fas fa-magnet"></i>
+            </div>
+            <div id="shield" class="powerUp" title="Shield">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <div id="timeSlowdown" class="powerUp" title="Time Slowdown">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div id="multiplier" class="powerUp" title="Score Multiplier">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+
+        <div id="weather">
+            <i class="fas fa-sun"></i>
+            <span id="weatherText">Clear</span>
+        </div>
+
+        <div id="theme">
+            <i class="fas fa-tree"></i>
+            <span id="themeText">Jungle</span>
+        </div>
+
+        <div id="settings">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+        </div>
+
+        <div id="settingsMenu">
+            <div class="settingsOption">
+                <input type="checkbox" id="soundToggle">
+                <label for="soundToggle">Sound</label>
+            </div>
+            <div class="settingsOption">
+                <input type="checkbox" id="musicToggle" checked>
+                <label for="musicToggle">Music</label>
+            </div>
+            <div class="settingsOption">
+                <input type="checkbox" id="particlesToggle" checked>
+                <label for="particlesToggle">Particles</label>
+            </div>
+        </div>
+
+        <div id="controls">
+            <div><span class="key">←</span> <span class="key">→</span> Move</div>
+            <div><span class="key">SPACE</span> Jump</div>
+            <div><span class="key">ESC</span> Pause</div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <script src="game.js"></script>
+</body>
+</html>
