@@ -1,4 +1,5 @@
-# Temple Run 3D
+# GEUS
+
 
 A modern 3D endless runner game built with Three.js, featuring dynamic environments and weather systems.
 
